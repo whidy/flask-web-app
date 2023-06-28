@@ -6,6 +6,8 @@
 * https://flask.palletsprojects.com/en/2.3.x/quickstart/
 * https://liaobots.com/zh
 
+* https://matiasfuentes.hashnode.dev/how-to-deploy-a-flask-web-app-on-vercel
+
 ## 运行
 
 ```
