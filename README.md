@@ -14,7 +14,12 @@
 python3 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
-flask --app application run
+
+# 本地运行
+flask --app index run
+
+# 生产模式
+gunicorn wsgi:app
 ```
 
 ## 模型

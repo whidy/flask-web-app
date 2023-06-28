@@ -6,11 +6,14 @@
 
   <style>
     /* 样式 */
-    .message {
+    .message-wrapper {
+      border: 1px solid #eee;
       margin: 10px;
       padding: 10px;
-      background-color: #eee;
-      border-radius: 5px;
+      background-color: #efefef;
+    }
+    .message {
+      padding: 4px 10px;
     }
   </style>
 </head>
@@ -33,6 +36,20 @@
     <p>使用有限制次数，如果无效了请自行换key</p>
   </div>
   <script>
+    let messageId = 0;
+    // 时间转换
+    const datetimeFormatter = function (now) {
+      // now转换日期及时间
+      const year = now.getFullYear();
+      const month = ('0' + (now.getMonth() + 1)).slice(-2);
+      const day = ('0' + now.getDate()).slice(-2);
+      const hour = ('0' + now.getHours()).slice(-2);
+      const minute = ('0' + now.getMinutes()).slice(-2);
+      const second = ('0' + now.getSeconds()).slice(-2);
+      const datetime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+      return datetime
+    }
+
     // 获取对话记录区域和表单元素
     const dialogue = document.getElementById('dialogue');
     const form = document.querySelector('form');
@@ -40,13 +57,24 @@
     // 在表单提交时发送请求
     form.addEventListener('submit', (event) => {
       event.preventDefault();
+
+      const messageWrapper = document.createElement('div');
+      messageWrapper.id = messageId
+      messageWrapper.className = 'message-wrapper';
       const formData = new FormData(form);
+      // 显示用户提问
+      const question = formData.get('question');
+      const questionMessage = document.createElement('div');
+      questionMessage.className = 'message';
+      questionMessage.innerText = '[' + datetimeFormatter(new Date()) + '] ' + question;
+      messageWrapper.appendChild(questionMessage);
+      dialogue.appendChild(messageWrapper);
 
       // 显示加载效果
       const loading = document.createElement('div');
       loading.className = 'message';
-      loading.innerText = '载入中...';
-      dialogue.appendChild(loading);
+      loading.innerText = '数据获取中...';
+      messageWrapper.appendChild(loading);
 
 
       fetch('/gpt', {
@@ -55,36 +83,21 @@
       })
         .then(response => response.json())
         .then(data => {
-          // 获取当前时间
-          const now = new Date();
-          // now转换日期及时间
-          const year = now.getFullYear();
-          const month = ('0' + (now.getMonth() + 1)).slice(-2);
-          const day = ('0' + now.getDate()).slice(-2);
-          const hour = ('0' + now.getHours()).slice(-2);
-          const minute = ('0' + now.getMinutes()).slice(-2);
-          const second = ('0' + now.getSeconds()).slice(-2);
-          const datetime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 
           // 移除加载效果
-          dialogue.removeChild(loading);
-
-          // 显示用户提问
-          const question = formData.get('question');
-          const questionMessage = document.createElement('div');
-          questionMessage.className = 'message';
-          questionMessage.innerText = '[' + datetime + '] ' + question;
-          dialogue.appendChild(questionMessage);
+          messageWrapper.removeChild(loading);
 
           // 显示服务器返回的回答
           const answer = data.answer;
           const answerMessage = document.createElement('div');
           answerMessage.className = 'message';
-          answerMessage.innerText = '[' + datetime + '] ' + answer;
-          dialogue.appendChild(answerMessage);
+          answerMessage.innerText = '[' + datetimeFormatter(new Date()) + '] ' + answer;
+          messageWrapper.appendChild(answerMessage);
+          dialogue.appendChild(messageWrapper);
 
           // 清空输入框
           form.elements['question'].value = '';
+          messageId++
         });
     });
   </script>

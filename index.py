@@ -1,5 +1,5 @@
 import g4f
-
+import time
 from flask import Flask, request, url_for, render_template, make_response
 from markupsafe import escape
 
@@ -21,6 +21,8 @@ def hello_world(name=None):
 @app.route("/gpt", methods=["GET", "POST"])
 def gpt():
     if request.method == "POST":
+        # time.sleep(2)
+        # return {"answer": "test message"}
         question = request.form["question"]
         auth = request.form["auth"] or "4PT9JqBJscqCw"
         model = request.form["model"] or "gpt-3.5-turbo"
