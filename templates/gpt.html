@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Talk to GPT</title>
+
+  <style>
+    /* 样式 */
+    .message {
+      margin: 10px;
+      padding: 10px;
+      background-color: #eee;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="dialogue">
+    <!-- 对话记录区域 -->
+  </div>
+
+  <div id="input">
+    <form action="{{ url_for('gpt') }}" method="POST">
+      <input type="text" name="auth" placeholder="请输入你自己的key">
+      <input type="text" name="model" placeholder="请输入模型">
+      <input type="text" name="question" placeholder="请输入问题">
+      <input type="submit" value="提交">
+    </form>
+    <p>key可以从<a href="https://liaobots.com/zh">liaobots</a>获取。</p>
+    <p>Model默认为"gpt-3.5-turbo", 或者"gpt-4"。</p>
+    <p>使用有限制次数，如果无效了请自行换key</p>
+  </div>
+  <script>
+    // 获取对话记录区域和表单元素
+    const dialogue = document.getElementById('dialogue');
+    const form = document.querySelector('form');
+
+    // 在表单提交时发送请求
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+
+      // 显示加载效果
+      const loading = document.createElement('div');
+      loading.className = 'message';
+      loading.innerText = '载入中...';
+      dialogue.appendChild(loading);
+
+
+      fetch('/gpt', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          // 获取当前时间
+          const now = new Date();
+          // now转换日期及时间
+          const year = now.getFullYear();
+          const month = ('0' + (now.getMonth() + 1)).slice(-2);
+          const day = ('0' + now.getDate()).slice(-2);
+          const hour = ('0' + now.getHours()).slice(-2);
+          const minute = ('0' + now.getMinutes()).slice(-2);
+          const second = ('0' + now.getSeconds()).slice(-2);
+          const datetime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+
+          // 移除加载效果
+          dialogue.removeChild(loading);
+
+          // 显示用户提问
+          const question = formData.get('question');
+          const questionMessage = document.createElement('div');
+          questionMessage.className = 'message';
+          questionMessage.innerText = '[' + datetime + '] ' + question;
+          dialogue.appendChild(questionMessage);
+
+          // 显示服务器返回的回答
+          const answer = data.answer;
+          const answerMessage = document.createElement('div');
+          answerMessage.className = 'message';
+          answerMessage.innerText = '[' + datetime + '] ' + answer;
+          dialogue.appendChild(answerMessage);
+
+          // 清空输入框
+          form.elements['question'].value = '';
+        });
+    });
+  </script>
+
+</body>
+
+</html>
