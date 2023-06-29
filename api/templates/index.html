@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flask By Whidy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
@@ -13,6 +14,75 @@
     <li><a href="/gpt">GPT</a></li>
     <li><a href="/about">关于</a></li>
   </ul>
+
+  <div class="word-wrapper">
+    <h2>Leave a message to Whidy, Whidy won't reply later but not never.</h2>
+    <ul class="word-list">
+      {% for message in messages %}
+      <li>
+        <div class="message-content">{{ message.message }}</div>
+        <div class="message-meta">{{ message.name }} - {{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    <form id="message-form" class="message-form">
+      <div class="form-group">
+        <label for="name-input">姓名</label>
+        <input type="text" id="name-input" class="form-control" placeholder="请输入您的姓名" required>
+      </div>
+      <div class="form-group">
+        <label for="email-input">电子邮件</label>
+        <input type="email" id="email-input" class="form-control" placeholder="请输入您的邮箱" required>
+      </div>
+      <div class="form-group">
+        <label for="message-input">留言内容</label>
+        <textarea id="message-input" class="form-control" placeholder="请输入留言内容" required></textarea>
+      </div>
+      <button type="button" id="submit-button" class="btn btn-primary">提交留言</button>
+    </form>
+  </div>
+
+  <script>
+    // 提交留言的js
+    const form = document.querySelector('#message-form');
+    const nameInput = document.querySelector('#name-input');
+    const emailInput = document.querySelector('#email-input');
+    const messageInput = document.querySelector('#message-input');
+    const submitButton = document.querySelector('#submit-button');
+
+    submitButton.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!name || !email || !message) {
+        alert('请填写完整的留言信息！');
+        return;
+      }
+
+      const data = new FormData();
+      data.append('name', name);
+      data.append('email', email);
+      data.append('message', message);
+
+      fetch('/submit_comment', {
+        method: 'POST',
+        body: data
+      })
+        .then(response => response.json())
+        .then(result => {
+          // alert(result.message);
+          // nameInput.value = '';
+          // emailInput.value = '';
+          // messageInput.value = '';
+          location.reload();
+        })
+        .catch(error => {
+          alert('留言提交失败，请重试！');
+          console.error(error);
+        });
+    });
+  </script>
 </body>
 
 </html>

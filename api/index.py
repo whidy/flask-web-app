@@ -1,16 +1,45 @@
 import g4f
+from datetime import datetime
+import configparser
 import os
-from flask import Flask, request, url_for, render_template, make_response
+from flask import (
+    Flask,
+    request,
+    jsonify,
+    url_for,
+    render_template,
+    make_response,
+    current_app,
+    g,
+)
 from markupsafe import escape
 
-# url_for('static', filename='style.css')
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
-app = Flask(__name__)
+uri = os.environ.get("MONGO_URI")
+
+client = MongoClient(uri, server_api=ServerApi("1"))
+try:
+    client.admin.command("ping")
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
+# 获取所有数据库的名称
+db_names = client.list_database_names()
+# for name in db_names:
+#     print(name)
+db = client["gpt"]
+messages = db["messages"]
+app = Flask(__name__, static_url_path="/static")
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    # return render_template("index.html")
+    all_messages = messages.find().sort('timestamp', -1)
+    return render_template("index.html", messages=all_messages)
 
 
 @app.route("/hello/<name>")
@@ -49,6 +78,28 @@ def gpt():
 def about():
     return "The about page, Nothing more but whidy look at you."
 
+
+@app.route("/submit_comment", methods=["POST"])
+def submit_comment():
+    now = datetime.now()
+    # 解析表单数据
+    name = request.form.get("name")
+    email = request.form.get("email")
+    message = request.form.get("message")
+
+    # 将数据保存到 MongoDB 数据库中
+    result = messages.insert_one(
+        {"name": name, "email": email, "message": message, "timestamp": now}
+    )
+
+    # 返回成功消息
+    return jsonify(
+        {"status": "success", "message": "留言提交成功！", "id": str(result.inserted_id)}
+    )
+
+
+config = configparser.ConfigParser()
+config.read(os.path.abspath(os.path.join(".ini")))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

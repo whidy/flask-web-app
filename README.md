@@ -16,11 +16,18 @@ python3 -m venv .venv
 pip install -r requirements.txt
 
 # 本地运行
-flask --app index run
+flask --app ./api/index run
 
 # 生产模式
 gunicorn index:app --chdir ./api
 ```
+
+## 数据库
+
+### MongoDB
+
+* https://www.digitalocean.com/community/tutorials/how-to-use-mongodb-in-a-flask-application
+* https://www.mongodb.com/compatibility/setting-up-flask-with-mongodb
 
 ## 部署
 

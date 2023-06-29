@@ -31,3 +31,5 @@ cookie.json
 *.pyc
 
 dist/
+
+.DS_Store
