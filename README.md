@@ -50,6 +50,11 @@ gunicorn wsgi:app
 
 已基本实现。请注意查看 `vercel.json`。
 
+相关阅读：
+
+* https://matiasfuentes.hashnode.dev/how-to-deploy-a-flask-web-app-on-vercel
+*
+
 ## 模型
 
 参见：g4f/models.py
