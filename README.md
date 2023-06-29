@@ -22,6 +22,15 @@ flask --app index run
 gunicorn wsgi:app
 ```
 
+## 部署
+
+在Heroku部署
+
+* https://www.geeksforgeeks.org/deploy-python-flask-app-on-heroku/
+* https://realpython.com/flask-by-example-part-1-project-setup/
+
+
+
 ## 模型
 
 参见：g4f/models.py
