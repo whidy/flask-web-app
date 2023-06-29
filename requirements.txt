@@ -25,4 +25,3 @@ xattr==0.10.1
 yarl==1.9.2
 pymongo[srv]
 Flask-PyMongo
-python-dotenv
