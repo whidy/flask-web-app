@@ -28,7 +28,9 @@ gunicorn index:app --chdir ./api
 
 ### 在Heroku部署
 
-仍在研究中。。。尚未成功。关于收费问题：
+Heroku部署已实现，自定义域名，搭配cloudflare，访问<https://flask.agoodboy.xyz/>，问题就是我确实还是不清楚 `dyno` 到底怎么收费，先开着试试看吧。
+
+关于收费问题：
 
 * https://devcenter.heroku.com/changelog-items/907
 * https://devcenter.heroku.com/articles/free-dyno-hours
@@ -37,7 +39,7 @@ gunicorn index:app --chdir ./api
 Personal accounts are given a base of 550 free dyno hours each month. In addition to these base hours, accounts which verify with a credit card will receive an additional 450 hours added to the monthly free dyno quota. This means you can receive a total of 1000 free dyno hours per month, if you verify your account with a credit card.
 ```
 
-总结：有免费额度，可以开启dyno，要不然根本无法跑python应用啊！
+不确定总结：普通个人用户有免费额度（每月550小时），如果添加信用卡则提升到1000小时，故而可以开启dyno。要不然根本无法跑python应用啊！
 
 * https://www.geeksforgeeks.org/deploy-python-flask-app-on-heroku/
 * https://realpython.com/flask-by-example-part-1-project-setup/
@@ -46,7 +48,7 @@ Personal accounts are given a base of 550 free dyno hours each month. In additio
 >
 > ~~当然这个wsgi名称可能造成困扰，暂时先这样吧。~~
 >
-> `Procfile`，由于需要适配vercel，所以最后写成了：`web: gunicorn index:app --chdir ./api`
+> `Procfile` ，由于需要适配vercel，所以最后写成了： `web: gunicorn index:app --chdir ./api`
 
 关于Heroku部署相关的资料
 
@@ -59,7 +61,9 @@ Personal accounts are given a base of 550 free dyno hours each month. In additio
 
 ### 在Vercel上进行部署
 
-已基本实现。请注意查看 `vercel.json`。
+Vercel部署已实现。请注意查看 `vercel.json` 。
+
+参考了许多资料，Vercel还是老毛病，非要搞个 `api` 目录。但是flask项目只需要配置 `rewrites` 选项即可。
 
 相关阅读：
 
