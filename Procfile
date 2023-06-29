@@ -1,1 +1,1 @@
-web: python3 api/index.py
+web: gunicorn wsgi:app
