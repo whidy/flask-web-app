@@ -42,9 +42,11 @@ Personal accounts are given a base of 550 free dyno hours each month. In additio
 * https://www.geeksforgeeks.org/deploy-python-flask-app-on-heroku/
 * https://realpython.com/flask-by-example-part-1-project-setup/
 
-> 似乎gunicorn是收费的（按照运行时间），参考：https://devcenter.heroku.com/articles/usage-and-billing#dyno-usage-and-costs，所以我将 `Procfile` 改为 `web: python3 wsgi.py` （原： `web: gunicorn wsgi:app` ）
+> ~~似乎gunicorn是收费的（按照运行时间），参考：https://devcenter.heroku.com/articles/usage-and-billing#dyno-usage-and-costs，所以我将 `Procfile` 改为 `web: python3 wsgi.py` （原： `web: gunicorn wsgi:app` ）~~
 >
-> 当然这个wsgi名称可能造成困扰，暂时先这样吧。
+> ~~当然这个wsgi名称可能造成困扰，暂时先这样吧。~~
+>
+> `Procfile`，由于需要适配vercel，所以最后写成了：`web: gunicorn index:app --chdir ./api`
 
 关于Heroku部署相关的资料
 
