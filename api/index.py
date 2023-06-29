@@ -1,5 +1,5 @@
 import g4f
-import time
+import os
 from flask import Flask, request, url_for, render_template, make_response
 from markupsafe import escape
 
@@ -49,5 +49,7 @@ def gpt():
 def about():
     return "The about page, Nothing more but whidy look at you."
 
+
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

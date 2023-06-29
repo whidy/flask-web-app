@@ -52,8 +52,8 @@ gunicorn wsgi:app
 
 相关阅读：
 
+* https://github.com/vercel/examples/tree/main/python/flask
 * https://matiasfuentes.hashnode.dev/how-to-deploy-a-flask-web-app-on-vercel
-*
 
 ## 模型
 
