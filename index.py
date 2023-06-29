@@ -48,3 +48,6 @@ def gpt():
 @app.route("/about")
 def about():
     return "The about page, Nothing more but whidy look at you."
+
+if __name__ == "__main__":
+    app.run()
