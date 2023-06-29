@@ -28,10 +28,12 @@ gunicorn wsgi:app
 
 ### 在Heroku部署
 
+仍在研究中。。。尚未成功。
+
 * https://www.geeksforgeeks.org/deploy-python-flask-app-on-heroku/
 * https://realpython.com/flask-by-example-part-1-project-setup/
 
-> 似乎gunicorn是收费的（按照运行时间），参考：https://devcenter.heroku.com/articles/usage-and-billing#dyno-usage-and-costs，所以我将 `Procfile` 改为`web: python3 wsgi.py`（原：`web: gunicorn wsgi:app`）
+> 似乎gunicorn是收费的（按照运行时间），参考：https://devcenter.heroku.com/articles/usage-and-billing#dyno-usage-and-costs，所以我将 `Procfile` 改为 `web: python3 wsgi.py` （原： `web: gunicorn wsgi:app` ）
 >
 > 当然这个wsgi名称可能造成困扰，暂时先这样吧。
 
@@ -46,7 +48,7 @@ gunicorn wsgi:app
 
 ### 在Vercel上进行部署
 
-研究实验中。。。
+已基本实现。请注意查看 `vercel.json`。
 
 ## 模型
 
