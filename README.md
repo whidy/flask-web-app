@@ -96,6 +96,17 @@ We will continue to provide low-cost solutions for compute and data resources: H
 * https://github.com/vercel/examples/tree/main/python/flask
 * https://matiasfuentes.hashnode.dev/how-to-deploy-a-flask-web-app-on-vercel
 
+#### 奇怪
+
+很奇怪的是，我把g4f目录放在项目根目录下，能够正常部署，如果放在api目录下就会出问题（表现为一直卡了很长时间的`Installing required dependencies...`，但是还是部署成功了，比如这个记录[deploy](https://vercel.com/whidy/flask-web-app/68vRbmxVAo9yTcdVoy3hGSyWrSUN)）。然而api目录下的`index.py`引用g4f，又会本地开发报错，因为不擅长python，就用了这个来自gpt的帮助看起来非常奇怪的方法。
+
+```
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import g4f
+```
+
 ## 模型
 
 参见：g4f/models.py
