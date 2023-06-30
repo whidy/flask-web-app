@@ -5,6 +5,24 @@
   <title>Talk to GPT</title>
 
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+    }
+
+    .tips {
+      margin: 10px;
+      color: blue;
+      font-size: 14px;
+    }
+
+    .line {
+      border-top: #efefef;
+      border-width: 1px;
+      border-style: dashed;
+    }
+
     /* 样式 */
     .message-wrapper {
       border: 1px solid #eee;
@@ -12,8 +30,17 @@
       padding: 10px;
       background-color: #efefef;
     }
+
     .message {
       padding: 4px 10px;
+    }
+
+    #input {
+      margin: 20px 10px;
+    }
+
+    .input-field {
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -22,18 +49,30 @@
 
   <div id="dialogue">
     <!-- 对话记录区域 -->
+    <p class="tips">请输入问题，并提交，开始一个无法被保存的会话！嘻嘻~</p>
   </div>
-
+  <div class="line"></div>
   <div id="input">
     <form action="{{ url_for('gpt') }}" method="POST">
-      <input type="text" name="auth" placeholder="请输入你自己的key">
-      <input type="text" name="model" placeholder="请输入模型">
-      <input type="text" name="question" placeholder="请输入问题">
+      <div class="input-field">
+        <label for="auth">Key：</label>
+        <input type="password" id="auth" name="auth" value="4PT9JqBJscqCw" placeholder="请输入你自己的key">
+        <p>当前默认值可以不填，使用有限制次数，如果无效了请自行换key。key可以从<a href="https://liaobots.com/zh">liaobots</a>获取。</p>
+      </div>
+      <div class="input-field">
+        <label for="model">模型：</label>
+        <select id="model" name="model">
+          <option value="gpt-3.5-turbo" selected>GPT-3.5 Turbo</option>
+          <option value="gpt-4">GPT-4</option>
+        </select>
+        <p>Model默认为"gpt-3.5-turbo", 或者"gpt-4"。</p>
+      </div>
+      <div class="input-field">
+        <label for="question">问题：</label>
+        <input type="text" id="question" name="question" placeholder="请输入问题">
+      </div>
       <input type="submit" value="提交">
     </form>
-    <p>key可以从<a href="https://liaobots.com/zh">liaobots</a>获取。</p>
-    <p>Model默认为"gpt-3.5-turbo", 或者"gpt-4"。</p>
-    <p>使用有限制次数，如果无效了请自行换key</p>
   </div>
   <script>
     let messageId = 0;
@@ -58,6 +97,10 @@
     form.addEventListener('submit', (event) => {
       event.preventDefault();
 
+      if (messageId === 0) {
+        dialogue.innerHTML = '';
+      }
+
       const messageWrapper = document.createElement('div');
       messageWrapper.id = messageId
       messageWrapper.className = 'message-wrapper';
@@ -81,9 +124,13 @@
         method: 'POST',
         body: formData
       })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
         .then(data => {
-
           // 移除加载效果
           messageWrapper.removeChild(loading);
 
@@ -98,6 +145,17 @@
           // 清空输入框
           form.elements['question'].value = '';
           messageId++
+        })
+        .catch(error => {
+          // 移除加载效果
+          messageWrapper.removeChild(loading);
+
+          // 显示错误信息
+          const errorMessage = document.createElement('div');
+          errorMessage.className = 'message';
+          errorMessage.innerText = '[' + datetimeFormatter(new Date()) + '] ' + '请求失败，错误信息：' + error.message;
+          messageWrapper.appendChild(errorMessage);
+          dialogue.appendChild(messageWrapper);
         });
     });
   </script>

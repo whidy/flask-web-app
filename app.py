@@ -69,7 +69,7 @@ def gpt():
             error_msg = str(e)
             response = make_response({"error": error_msg}, 500)
             response.headers["Content-Type"] = "application/json"
-            return {"answer": "发生错误，信息：" + response}
+            return {"answer": "发生错误，请重试，这应该是liaobots的锅~"}
     else:
         return render_template("gpt.html")
 
