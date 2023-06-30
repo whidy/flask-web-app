@@ -10,6 +10,10 @@
 
 ## 运行
 
+> 目前仅适用于Linux/macOS
+
+Flask教程：https://flask.palletsprojects.com/en/2.3.x/
+
 ```
 python3 -m venv .venv
 . .venv/bin/activate
