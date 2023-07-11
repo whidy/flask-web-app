@@ -26,3 +26,4 @@ yarl==1.9.2
 retrying
 PyExecJS
 browser_cookie3
+curl_cffi
