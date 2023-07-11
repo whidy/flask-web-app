@@ -11,6 +11,11 @@
       font-size: 14px;
     }
 
+    h1 {
+      margin: 10px;
+      font-size: 16px;
+    }
+
     .tips {
       margin: 10px;
       color: blue;
@@ -46,7 +51,7 @@
 </head>
 
 <body>
-
+  <h1>更新：2023年07月11日</h1>
   <div id="dialogue">
     <!-- 对话记录区域 -->
     <p class="tips">请输入问题，并提交，开始一个无法被保存的会话！嘻嘻~</p>
@@ -54,18 +59,27 @@
   <div class="line"></div>
   <div id="input">
     <form action="{{ url_for('gpt') }}" method="POST">
-      <div class="input-field">
+      <!-- <div class="input-field">
         <label for="auth">Key：</label>
-        <input type="password" id="auth" name="auth" value="4PT9JqBJscqCw" placeholder="请输入你自己的key">
-        <p>当前默认值可以不填，使用有限制次数，如果无效了请自行换key。key可以从<a href="https://liaobots.com/zh">liaobots</a>获取。</p>
+        <input type="password" id="auth" name="auth" value="" placeholder="请输入你自己的key">
+        <p>当前默认值可以不填，但使用有限制次数，如果无效了请自行换key。key可以从<a href="https://liaobots.com/zh">liaobots</a>获取。</p>
+      </div> -->
+      <div class="input-field">
+        <label for="provider">Provider：</label>
+        <select id="provider" name="provider">
+          <option value="Theb" selected>Theb</option>
+          <option value="Aichat">Aichat</option>
+          <option value="DeepAi">DeepAi</option>
+          <option value="GetGpt">GetGpt</option>
+        </select>
       </div>
       <div class="input-field">
         <label for="model">模型：</label>
         <select id="model" name="model">
           <option value="gpt-3.5-turbo" selected>GPT-3.5 Turbo</option>
-          <option value="gpt-4">GPT-4</option>
+          <!-- <option value="gpt-4">GPT-4</option> -->
         </select>
-        <p>Model默认为"gpt-3.5-turbo", 或者"gpt-4"。</p>
+        <p>Model默认为"gpt-3.5-turbo", "gpt-4"的都挂了。</p>
       </div>
       <div class="input-field">
         <label for="question">问题：</label>

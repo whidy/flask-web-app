@@ -1,8 +1,28 @@
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import g4f
 
+# print(g4f.Provider.Ails.params)
+
+provider_map = {
+    # "Ails": g4f.Provider.Ails,
+    # "You": g4f.Provider.You,
+    # "Bing": g4f.Provider.Bing,
+    # "Yqcloud": g4f.Provider.Yqcloud,
+    "Theb": g4f.Provider.Theb,  # ok
+    "Aichat": g4f.Provider.Aichat,  # ok
+    # "Bard": g4f.Provider.Bard,
+    # "Vercel": g4f.Provider.Vercel,
+    # "Forefront": g4f.Provider.Forefront,
+    # "Lockchat": g4f.Provider.Lockchat,
+    # "Liaobots": g4f.Provider.Liaobots,
+    # "H2o": g4f.Provider.H2o,
+    # "ChatgptLogin": g4f.Provider.ChatgptLogin,
+    "DeepAi": g4f.Provider.DeepAi,  # ok
+    "GetGpt": g4f.Provider.GetGpt,  # ok
+}
 
 from datetime import datetime
 import configparser
@@ -36,13 +56,14 @@ db_names = client.list_database_names()
 #     print(name)
 db = client["gpt"]
 messages = db["messages"]
+gptRecords = db["gpt_records"]
 app = Flask(__name__, static_url_path="/static")
 
 
 @app.route("/")
 def index():
     # return render_template("index.html")
-    all_messages = messages.find().sort('timestamp', -1)
+    all_messages = messages.find().sort("timestamp", -1)
     return render_template("index.html", messages=all_messages)
 
 
@@ -57,22 +78,47 @@ def gpt():
         # time.sleep(2)
         # return {"answer": "test message"}
         question = request.form["question"]
-        auth = request.form["auth"] or "4PT9JqBJscqCw"
+        provider = request.form["provider"]
         model = request.form["model"] or "gpt-3.5-turbo"
+        # auth = request.form["auth"] or "m4rxMTa2JqEzE"
 
         try:
+            askTime = datetime.now()
             response = g4f.ChatCompletion.create(
                 model=model,
-                provider=g4f.Provider.Liaobots,
+                provider=provider_map.get(provider),
                 messages=[{"role": "user", "content": question}],
-                auth=auth,
+                # auth=auth,
             )
+
+            # 需要在此处向gpt_records表插入数据
+            record = {
+                "question": question,
+                "answer": response,
+                "question_time": askTime,
+                "answer_time": datetime.now(),
+                "model": model,
+                "provider": provider,
+                # "auth_key": auth,
+            }
+            gptRecords.insert_one(record)
             return {"answer": response}
 
         except Exception as e:
             error_msg = str(e)
             response = make_response({"error": error_msg}, 500)
             response.headers["Content-Type"] = "application/json"
+            # 需要在此处向gpt_records表插入数据
+            record = {
+                "question": question,
+                "answer": error_msg,
+                "question_time": askTime,
+                "answer_time": datetime.now(),
+                "provider": provider,
+                "model": model,
+                # "auth_key": auth,
+            }
+            gptRecords.insert_one(record)
             return {"answer": "发生错误，请重试，这应该是liaobots的锅~"}
     else:
         return render_template("gpt.html")

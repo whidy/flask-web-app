@@ -1,5 +1,13 @@
 # Python Web Application
 
+## 日志
+
+### 2023年07月11日
+
+很多经常不通，所以这个程序不是很稳定。
+
+## 说明
+
 参考：
 
 * https://github.com/xtekky/gpt4free
