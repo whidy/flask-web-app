@@ -9,3 +9,5 @@ retrying
 PyExecJS
 browser_cookie3
 curl_cffi
+pymongo
+pycryptodome
