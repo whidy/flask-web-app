@@ -23,4 +23,5 @@ urllib3==2.0.3
 Werkzeug==2.3.6
 xattr==0.10.1
 yarl==1.9.2
+browser_cookie3
 pymongo
